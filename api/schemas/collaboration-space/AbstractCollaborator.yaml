@@ -1,0 +1,29 @@
+type: object
+description: Abstract Collaborator
+properties:
+  clientId:
+    type: string
+  name:
+    type: string
+    description: A name given the collaborator. This value is intended to be read by humans.
+    example: My Collaborator
+  label:
+    type: string
+    description: A label given the collaborator. This value is intended to refered to in code.
+    example: my-collaborator
+
+  configuration:
+    description: A configuration of the collaborator. This is an object representing key-value pairs that will be available in the cage as environment variables.
+    type: object
+    additionalProperties: 
+      type: string
+discriminator:
+  propertyName: role
+  mapping:
+    CodeProvider: ./CollaboratorRoleCodeProvider.yaml
+    DataProvider: ./CollaboratorRoleDataProvider.yaml
+    DataConsumer: ./CollaboratorRoleDataConsumer.yaml
+oneOf:
+  - $ref: ./CollaboratorRoleCodeProvider.yaml
+  - $ref: ./CollaboratorRoleDataProvider.yaml
+  - $ref: ./CollaboratorRoleDataConsumer.yaml

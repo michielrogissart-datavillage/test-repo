@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: ControlPlane internal API
+  version: latest
+servers:
+  - url: https://<control-plane-api>
+paths:
+  /collaborators:
+    get:
+      operationId: GetCollaborators
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Get Collaborators
+      description: Get all collaborators of a collaboration space. Allowed if the client owns it or is a collaborator.
+      responses:
+        "200":
+          description: The models of the collaborators in the space.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "schemas/collaboration-space/Collaborator.yaml"
+        "401":
+          $ref: "schemas/UnauthorizedError.yaml"
+        "404":
+          $ref: "schemas/NotFoundError.yaml"
+
+
+components:
+  securitySchemes:
+      ApiKey:
+         type: apiKey
+         name: X-Cage-Id
+         in: header
+security:
+   - ApiKey: []

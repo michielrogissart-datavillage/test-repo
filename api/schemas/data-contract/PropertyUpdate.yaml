@@ -1,0 +1,4 @@
+title: Update Property
+description: ODCS properties of a property
+allOf:
+  - $ref: AbstractProperty.yaml

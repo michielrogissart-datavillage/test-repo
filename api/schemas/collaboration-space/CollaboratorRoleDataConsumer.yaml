@@ -1,0 +1,14 @@
+type: object
+x-ogen-name: DataConsumer
+description: Someone who consumes data
+properties:
+  role:
+    type: string
+    example: DataConsumer
+
+  settings:
+    type: object
+    properties:
+      description:
+        type: string
+

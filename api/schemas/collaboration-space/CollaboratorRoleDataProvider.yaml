@@ -1,0 +1,13 @@
+type: object
+x-ogen-name: DataProvider
+description: Someone who provides Data
+properties:
+  role:
+    type: string
+    example: DataProvider
+
+  settings:
+    type: object
+    properties:
+      description:
+        type: string

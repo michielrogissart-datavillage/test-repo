@@ -1,0 +1,38 @@
+get:
+  security: []
+  operationId: GetCollaborationSpaceWebId
+  x-ogen-operation-group: WellKnown
+  tags:
+    - Public
+  summary: Get WebId Document
+  description: Get the turtle document describing the collaboration space as an agent in a Solid eco-system. The URI serves as WebID of the agent.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space associated with the WebID.
+  responses:
+    "200":
+      description: The WebId document conform the Solid specifications, serialized in turtle format.
+      content:
+        text/turtle:
+          schema:
+            type: string
+            example: >
+              @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+
+              @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+
+              @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+
+
+              <https://api.gke.datavillage.me/.well-known/collaboration-spaces/abcd/webid>
+                a foaf:Agent ;
+                solid:oidcIssuer   <https://solid-idp.datavillage.me> ;
+                skos:prefLabel "Test collaboration space";
+                foaf:logo <https://client.example/logo.png>;
+                foaf:homepage <https://client.example/>.
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"

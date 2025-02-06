@@ -1,0 +1,5 @@
+# TODO: this will need to change as you shouldn't be able to update the clientId or the role
+# Will depend on how we model collaborators in the db
+description: Collaborator Update
+allOf:
+  - $ref: ./AbstractCollaborator.yaml

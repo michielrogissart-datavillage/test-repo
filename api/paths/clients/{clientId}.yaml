@@ -1,0 +1,25 @@
+get:
+  operationId: GetClient
+  x-ogen-operation-group: Clients
+  tags:
+    - Clients
+  summary: Get client
+  description: Get all information related to a client
+  parameters:
+    - in: path
+      name: clientId
+      schema:
+        type: string
+      required: true
+      description: The requested client.
+  responses:
+    "200":
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/client/DvClient.yaml"
+
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"

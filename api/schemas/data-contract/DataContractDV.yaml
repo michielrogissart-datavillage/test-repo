@@ -1,0 +1,13 @@
+# Properties of a data contract specific to the Datavillage DCP
+description: Metadata added to data contracts by Datavillage DCP
+type: object
+properties:
+  id:
+    type: string
+    description: A unique identifier used in the Datavillage DCP to identify a data contract
+  clientId:
+    type: string
+    description: Id of the client owning the data contract
+required:
+  - id
+  - clientId

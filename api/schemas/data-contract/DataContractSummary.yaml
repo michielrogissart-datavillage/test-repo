@@ -1,0 +1,25 @@
+# Set of properties to easily identify a data contract. Communicated when requesting all data contracts.
+title: Data Contract Summary
+description: The metadata fields added by Datavillage DCP along with key properties of ODCS description
+allOf:
+  - $ref: "./DataContractDV.yaml"
+  - type: object
+    properties:
+      dataContractSummary:
+        type: object
+        properties:
+          version:
+            type: string
+            description: Current version of the data contract.
+          name:
+            type: string
+            description: Name of the data contract.
+          status:
+            type: string
+            description: Current status of the dataset. Valid values are `production`, `test`, or `development`.
+            example:
+              - production
+              - test
+              - development
+        required: [version, name, status]
+  - required: [dataContractSummary]

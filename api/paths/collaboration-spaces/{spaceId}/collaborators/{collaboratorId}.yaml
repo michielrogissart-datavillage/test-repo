@@ -1,0 +1,96 @@
+get:
+  operationId: GetCollaborator
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Get Collaborator
+  description: Get a collaborator by ID. Allowed if the client is owner or collaborator of the collaboration space.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space of the collaborator.
+    - in: path
+      name: collaboratorId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaborator.
+  responses:
+    "200":
+      description: The description of the collaborator.
+      content:
+        application/json:
+          schema:
+            $ref: "../../../../schemas/collaboration-space/Collaborator.yaml"
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"
+
+patch:
+  operationId: UpdateCollaborator
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Update Collaborator
+  description: Update a collaborator by ID. Allowed if the client owns the collaborator.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space of the collaborator.
+    - in: path
+      name: collaboratorId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaborator to update.
+  requestBody:
+    description: The properties to update.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../schemas/collaboration-space/CollaboratorUpdate.yaml"
+  responses:
+    "204":
+      $ref: ../../../../schemas/NoContent.yaml
+    "400":
+      $ref: "../../../../schemas/BadRequestError.yaml"
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"
+
+delete:
+  operationId: DeleteCollaborator
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Delete Collaborator
+  description: Delete a collaborator by ID. Allowed if the client owns the collaborator.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space of the collaborator.
+    - in: path
+      name: collaboratorId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaborator.
+  responses:
+    "204":
+      $ref: ../../../../schemas/NoContent.yaml
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"

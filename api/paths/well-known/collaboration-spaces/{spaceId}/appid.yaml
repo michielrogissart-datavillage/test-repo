@@ -1,0 +1,34 @@
+get:
+  security: []
+  operationId: GetCollaborationSpaceAppId
+  x-ogen-operation-group: WellKnown
+  tags:
+    - Public
+  summary: Get AppId Document
+  description: Get the JSON-LD application document to authenticate the application in a Solid eco-system.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaboration space associated with the AppID.
+  responses:
+    "200":
+      description: The AppId document serialized as JSON-LD conform the Solid specifications.
+      content:
+        "application/ld+json":
+          schema:
+            type: string
+            example: >
+              {
+                "@context": "https://www.w3.org/ns/solid/oidc-context.jsonld",
+                "client_id": "https://api.gke.datavillage.me/.well-known/collaboration-spaces/abcd/appid",
+                "redirect_uris": [],
+                "scope": "openid webid",
+                "grant_types": ["password"],
+                "client_name": "Test collaboration space - application",
+                "logo_uri": "https://client.example/logo.png"
+              }
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"

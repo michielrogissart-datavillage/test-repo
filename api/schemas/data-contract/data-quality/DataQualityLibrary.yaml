@@ -1,0 +1,54 @@
+type: object
+x-ogen-name: DataQualityLibrary
+properties:
+  type:
+    type: string
+    description: The type of quality check. 'text' is human-readable text that describes the quality of the data. 'library' is a set of maintained predefined quality attributes such as row count or unique. 'sql' is an individual SQL query that returns a value that can be compared. 'custom' is quality attributes that are vendor-specific, such as Soda or Great Expectations.
+    enum:
+      - text
+      - library
+      - sql
+      - custom
+    default: library
+  rule:
+    type: string
+    description: Define a data quality check based on the predefined rules as per ODCS.
+    examples:
+      - duplicateCount
+      - validValues
+      - rowCount
+  mustBe:
+    description: Must be equal to the value to be valid. When using numbers, it is equivalent to '='.
+  mustNotBe:
+    description: Must not be equal to the value to be valid. When using numbers, it is equivalent to '!='.
+  mustBeGreaterThan:
+    type: number
+    description: Must be greater than the value to be valid. It is equivalent to '>'.
+  mustBeGreaterOrEqualTo:
+    type: number
+    description: Must be greater than or equal to the value to be valid. It is equivalent to '>='.
+  mustBeLessThan:
+    type: number
+    description: Must be less than the value to be valid. It is equivalent to '<'.
+  mustBeLessOrEqualTo:
+    type: number
+    description: Must be less than or equal to the value to be valid. It is equivalent to '<='.
+  mustBeBetween:
+    type: array
+    description: Must be between the two numbers to be valid. Smallest number first in the array.
+    minItems: 2
+    maxItems: 2
+    uniqueItems: true
+    nullable: true
+    items:
+      type: number
+  mustNotBeBetween:
+    type: array
+    description: Must not be between the two numbers to be valid. Smallest number first in the array.
+    minItems: 2
+    maxItems: 2
+    uniqueItems: true
+    nullable: true
+    items:
+      type: number
+required: [rule]

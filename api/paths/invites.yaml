@@ -1,0 +1,25 @@
+get:
+  operationId: GetInvites
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  responses:
+    "200":
+      content:
+        application/json:
+          schema: 
+            type: array
+    "401":
+      $ref: "../schemas/UnauthorizedError.yaml"
+
+post:
+  operationId: CreateInvites
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  summary: Invite Collaborator
+  description: Invite another client as a collaborator of a space.
+  # TODO: add request body
+  responses:
+    "204":
+      $ref: "../schemas/NoContent.yaml"

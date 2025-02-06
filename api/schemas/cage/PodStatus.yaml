@@ -1,0 +1,17 @@
+type: object
+required:
+  - name
+  - status
+  - imageId
+properties:
+  name:
+    type: string
+  status:
+    type: string
+  status_since:
+    type: string
+    format: date-time
+  imageIds:
+    type: array
+    items:
+      type: string

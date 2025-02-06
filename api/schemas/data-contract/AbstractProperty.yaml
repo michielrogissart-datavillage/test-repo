@@ -1,0 +1,79 @@
+# Taken from ODCS: a property in a schema
+
+# Ogen does not support allOf-anyOf combo so it is declared outside the allOf
+properties:
+  examples:
+    type: array
+    description: List of sample element values.
+    items:
+      anyOf:
+        - type: string
+        - type: number
+        - type: integer
+        - type: boolean
+        - type: array
+        - type: object
+allOf:
+  - $ref: "Element.yaml"
+  - type: object
+    properties:
+      primaryKey:
+        type: boolean
+        description: Boolean value specifying whether the element is primary or not. Default is false.
+      primaryKeyPosition:
+        type: integer
+        description: If element is a primary key, the position of the primary key element. Starts from 1. Example of `account_id, name` being primary key columns, `account_id` has primaryKeyPosition 1 and `name` primaryKeyPosition 2. Default to -1.
+      logicalType:
+        type: string
+        description: The logical element data type.
+        enum:
+          - string
+          - date
+          - number
+          - integer
+          - object
+          - array
+          - boolean
+      logicalTypeOptions:
+        type: object
+        description: Additional optional metadata to describe the logical type.
+      physicalType:
+        type: string
+        description: The physical element data type in the data source. For example, VARCHAR(2), DOUBLE, INT.
+      required:
+        type: boolean
+        description: Indicates if the element may contain Null values; possible values are true and false. Default is false.
+      unique:
+        type: boolean
+        description: Indicates if the element contains unique values; possible values are true and false. Default is false.
+      partitioned:
+        type: boolean
+        description: Indicates if the element is partitioned; possible values are true and false.
+      partitionKeyPosition:
+        type: integer
+        description: If element is used for partitioning, the position of the partition element. Starts from 1. Example of `country, year` being partition columns, `country` has partitionKeyPosition 1 and `year` partitionKeyPosition 2. Default to -1.
+      classification:
+        type: string
+        description: Can be anything, like confidential, restricted, and public to more advanced categorization. Some companies like PayPal, use data classification indicating the class of data in the element; expected values are 1, 2, 3, 4, or 5.
+        example:
+          - confidential
+          - restricted
+          - public
+      encryptedName:
+        type: string
+        description: The element name within the dataset that contains the encrypted element value. For example, unencrypted element `email_address` might have an encryptedName of `email_address_encrypt`.
+      transformSourceObjects:
+        type: array
+        description: List of objects in the data source used in the transformation.
+        items:
+          type: string
+      transformLogic:
+        type: string
+        description: Logic used in the element transformation.
+      transformDescription:
+        type: string
+        description: Describes the transform logic in very simple terms.
+
+      criticalDataElement:
+        type: boolean
+        description: True or false indicator; If element is considered a critical data element (CDE) then true else false.

@@ -1,0 +1,19 @@
+allOf:
+  - $ref: "Element.yaml"
+  - type: object
+    properties:
+      logicalType:
+        type: string
+        description: The logical element data type.
+        enum:
+          - object
+      physicalName:
+        type: string
+        description: Physical name.
+        example:
+          - table_1_2_0
+      dataGranularityDescription:
+        type: string
+        description: Granular level of the data in the object.
+        example:
+          - Aggregation by country

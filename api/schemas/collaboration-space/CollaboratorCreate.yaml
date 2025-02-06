@@ -1,0 +1,6 @@
+description: CollaboratorCreate
+allOf:
+  - $ref: ./AbstractCollaborator.yaml
+  - type: object
+    required:
+      - clientId

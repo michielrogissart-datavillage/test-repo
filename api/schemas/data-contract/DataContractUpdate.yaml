@@ -1,0 +1,10 @@
+title: Data Contract Update
+description: ODCS properties of a data contract where schemas should comply
+allOf:
+  - $ref: AbstractDataContract.yaml
+  - type: object
+    properties:
+      schema:
+        type: array
+        items:
+          $ref: SchemaCreate.yaml

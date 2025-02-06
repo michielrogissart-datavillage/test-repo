@@ -1,0 +1,11 @@
+title: Schema Create
+description: ODCS description of a schema
+allOf:
+  - $ref: "AbstractSchema.yaml"
+  - type: object
+    properties:
+      properties:
+        type: array
+        items:
+          $ref: "PropertyCreate.yaml"
+    required: [name]

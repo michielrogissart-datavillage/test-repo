@@ -1,0 +1,29 @@
+get:
+  operationId: GetPublicClient
+  x-ogen-operation-group: WellKnown
+  security: []
+  tags:
+    - Public
+  summary: Get Client Info
+  description: Get public information about a client based on a human readable label.
+  parameters:
+    - in: path
+      name: clientLabel
+      required: true
+      schema:
+        type: string
+      description: A human readable label that uniquely identifies the client.
+  responses:
+    "200":
+      description: Public information about the client.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              issuer:
+                type: string
+                description: The IDP the client uses to authenticate its developers.
+            required: [issuer]
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

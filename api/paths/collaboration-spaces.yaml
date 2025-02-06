@@ -1,0 +1,38 @@
+get:
+  operationId: GetCollaborationSpaces
+  summary: Get Collaboration Spaces
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  description: Get all collaboration spaces the user has access to.
+  responses:
+    "200":
+      description: The models of the collaboration spaces.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/collaboration-space/CollaborationSpace.yaml"
+    "401":
+      $ref: "../schemas/UnauthorizedError.yaml"
+
+post:
+  operationId: CreateCollaborationSpace
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Create Collaboration Space
+  description: Create a new collaboration space owned by the client the user is authenticated for.
+  requestBody:
+    description: The model of the space to create.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/collaboration-space/CollaborationSpaceCreate.yaml"
+  responses:
+    "201":
+      $ref: "../schemas/CreatedResource.yaml"
+    "401":
+      $ref: "../schemas/UnauthorizedError.yaml"

@@ -1,0 +1,51 @@
+get:
+  operationId: GetInvite
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  parameters:
+    - in: path
+      name: inviteId
+      schema:
+        type: string
+      required: true
+  responses:
+    "200":
+      $ref: "../../schemas/NoContent.yaml"
+
+patch:
+  operationId: UpdateInvite
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  parameters:
+    - in: path
+      name: inviteId
+      schema:
+        type: string
+      required: true
+  responses:
+    "204":
+      $ref: "../../schemas/NoContent.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"
+
+delete:
+  operationId: DeleteInvite
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  summary: Delete invite
+  parameters:
+    - in: path
+      name: inviteId
+      schema:
+        type: string
+      required: true
+  responses:
+    "204":
+      $ref: "../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"

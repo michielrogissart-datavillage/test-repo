@@ -1,0 +1,29 @@
+type: object
+x-ogen-name: CodeProvider
+description: Someone who provides code
+properties:
+  role:
+    type: string
+    example: CodeProvider
+  settings:
+    type: object
+    properties:
+      description:
+        type: string
+  source: 
+    type: object
+    required:
+      - registry
+      - image
+      - tag
+    properties:
+      registry: 
+        type: string
+      image: 
+        type: string
+      tag:
+        type: string
+      secret: 
+        type: string
+        description: A value that will be interpreted as an ImagePullSecret. An example would be a github access token that has at least the scope `packages:read`, base64 encoded as `username:token`. If no value is provided no ImagePullSecret will be used when deploying the cage.
+          

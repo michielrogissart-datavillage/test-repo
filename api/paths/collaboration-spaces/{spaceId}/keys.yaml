@@ -1,0 +1,21 @@
+post:
+  operationId: RotateKeys
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Cages
+  summary: Rotate keys
+  description: Rotates the keys of the secret manager supporting the space
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space to handle the event.
+  responses:
+    "200":
+      $ref: "../../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

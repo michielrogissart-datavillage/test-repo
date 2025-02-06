@@ -1,0 +1,92 @@
+get:
+  tags:
+    - Data Contracts
+  operationId: GetSchema
+  x-ogen-operation-group: DataContracts
+  summary: Get Schema
+  description: Get the ODCS description of a schema by ID.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract where the schema can be found.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested schema.
+  responses:
+    "200":
+      description: The ODCS description of the schema.
+      content:
+        application/json:
+          schema:
+            $ref: "../../../../schemas/data-contract/Schema.yaml"
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"
+
+patch:
+  tags:
+    - Data Contracts
+  summary: Update Schema
+  operationId: UpdateSchema
+  description: Update ODCS properties of a schema by ID. Nested fields will be overwritten if specified. Allowed if the client owns the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract where the schema can be found.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      description: The ID of the schema to update.
+      required: true
+  requestBody:
+    description: The ODCS properties to update.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../schemas/data-contract/SchemaUpdate.yaml"
+  responses:
+    "204":
+      $ref: "../../../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"
+
+delete:
+  tags:
+    - Data Contracts
+  summary: Delete Schema
+  operationId: DeleteSchema
+  description: Delete a schema by ID. Allowed if the client owns the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract where the schema can be found.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      required: true
+      description: The ID of the schema to delete.
+  responses:
+    "204":
+      $ref: "../../../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"

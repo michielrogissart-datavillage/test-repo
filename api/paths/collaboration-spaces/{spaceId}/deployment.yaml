@@ -1,0 +1,75 @@
+get:
+  operationId: GetDeployment
+  x-ogen-operation-group: CollaborationSpaces
+  summary: Get deployment
+  description: Get information of the current deployment of the cage. An object is returned that contains the status of the deployment as well as the status of individual pods of the platform.
+  tags:
+    - Cages
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space associated with the confidential cluster.
+  responses:
+    "200":
+      content:
+        application/json:
+          schema:
+            $ref: "../../../schemas/cage/Deployment.yaml"
+      headers:
+        Signature:
+          description: Base64 encoding of the response body signed by the secret manager
+          required: false
+          schema:
+            type: string
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"
+
+delete:
+  operationId: DeleteCage
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Cages
+  summary: Delete Cage
+  description: Shut down the confidential cluster running the algorithm of a collaboration space.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space associated with the trusted environment.
+  responses:
+    "204":
+      $ref: "../../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"
+
+
+post:
+  operationId: DeployCage
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Cages
+  summary: Deploy Cage
+  description: Starts a confidential cluster if necessary and deploys the version of the algorithm as configured in the collaboration space model.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space for which to deploy a cage.
+  responses:
+    "200":
+      $ref: ../../../schemas/NoContent.yaml
+    "400":
+      $ref: "../../../schemas/BadRequestError.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

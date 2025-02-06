@@ -1,0 +1,12 @@
+# description of data contract
+type: object
+properties:
+  usage:
+    type: string
+    description: Intended usage of the dataset.
+  purpose:
+    type: string
+    description: Purpose of the dataset.
+  limitations:
+    type: string
+    description: Limitations of the dataset.

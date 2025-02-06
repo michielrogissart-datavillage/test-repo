@@ -1,0 +1,6 @@
+title: Property Create
+description: ODCS compliant description of a property
+allOf:
+  - $ref: "AbstractProperty.yaml"
+  - type: object
+    required: [name]

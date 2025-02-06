@@ -1,0 +1,31 @@
+get:
+  operationId: GetInviteStatus
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  parameters:
+    - in: path
+      name: inviteId
+      schema:
+        type: string
+      required: true
+  responses:
+    "200":
+      $ref: "../../../schemas/NoContent.yaml"
+
+patch:
+  operationId: UpdateInviteStatus
+  x-ogen-operation-group: Invites
+  tags:
+    - Invites
+  parameters:
+    - in: path
+      name: inviteId
+      schema:
+        type: string
+      required: true
+  responses:
+    "204":
+      $ref: "../../../schemas/NoContent.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

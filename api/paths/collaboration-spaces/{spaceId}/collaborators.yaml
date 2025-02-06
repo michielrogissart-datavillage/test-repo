@@ -1,0 +1,55 @@
+get:
+  operationId: GetCollaborators
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Get Collaborators
+  description: Get all collaborators of a collaboration space. Allowed if the client owns it or is a collaborator.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaboration space.
+  responses:
+    "200":
+      description: The models of the collaborators in the space.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../../../schemas/collaboration-space/Collaborator.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"
+post:
+  operationId: CreateCollaborator
+  tags:
+    - Collaboration Spaces
+  summary: Create Collaborator
+  description: Add a new collaborator to a collaboration space. Allowed if the client owns the space.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space to add a collaborator to.
+
+  requestBody:
+    description: The model of the collaborator to create.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../../schemas/collaboration-space/CollaboratorCreate.yaml"
+  responses:
+    "201":
+      $ref: "../../../schemas/CreatedResource.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

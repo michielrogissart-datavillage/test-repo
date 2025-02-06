@@ -1,0 +1,15 @@
+type: object
+x-ogen-name: ApiServer
+description: Data can be fetched with API call
+properties:
+  type:
+    type: string
+    description: Type of the server.
+    example: api
+  location:
+    type: string
+    format: uri
+    description: The url to the API.
+    examples:
+      - https://api.example.com/v1
+required: [type, location]

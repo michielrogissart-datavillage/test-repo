@@ -1,0 +1,114 @@
+openapi: 3.0.0
+info:
+  title: ControlPlane API
+  version: latest
+servers:
+  - url: https://<control-plane-api>
+paths:
+  /collaboration-spaces:
+    $ref: "./paths/collaboration-spaces.yaml"
+  /collaboration-spaces/{spaceId}:
+    $ref: "./paths/collaboration-spaces/{spaceId}.yaml"
+  /collaboration-spaces/{spaceId}/collaborators:
+    $ref: "./paths/collaboration-spaces/{spaceId}/collaborators.yaml"
+  /collaboration-spaces/{spaceId}/collaborators/{collaboratorId}:
+    $ref: "./paths/collaboration-spaces/{spaceId}/collaborators/{collaboratorId}.yaml"
+  /collaboration-spaces/{spaceId}/algo/logs:
+    $ref: "./paths/collaboration-spaces/{spaceId}/algo/logs.yaml"
+  /collaboration-spaces/{spaceId}/attestation-token:
+    $ref: "./paths/collaboration-spaces/{spaceId}/attestation-token.yaml"
+  /collaboration-spaces/{spaceId}/deployment:
+    $ref: "./paths/collaboration-spaces/{spaceId}/deployment.yaml"
+  /collaboration-spaces/{spaceId}/deployment/logs:
+    $ref: "./paths/collaboration-spaces/{spaceId}/deployment/logs.yaml"
+  /collaboration-spaces/{spaceId}/event:
+    $ref: "./paths/collaboration-spaces/{spaceId}/event.yaml"
+  /collaboration-spaces/{spaceId}/keys:
+    $ref: "./paths/collaboration-spaces/{spaceId}/keys.yaml"
+  /collaboration-spaces/{spaceId}/keys/public-key:
+    $ref: "./paths/collaboration-spaces/{spaceId}/keys/public-key.yaml"
+  /collaboration-spaces/{spaceId}/secrets/{secretId}:
+    $ref: "./paths/collaboration-spaces/{spaceId}/secrets/{secretId}.yaml"
+
+  /clients/{clientId}/notifications:
+    $ref: "./paths/clients/{clientId}/notifications.yaml"
+  /clients/{clientId}:
+    $ref: "./paths/clients/{clientId}.yaml"
+
+  /data-contracts:
+    $ref: "./paths/data-contracts.yaml"
+  /data-contracts/{contractId}:
+    $ref: "./paths/data-contracts/{contractId}.yaml"
+  /data-contracts/{contractId}/schema:
+    $ref: "./paths/data-contracts/{contractId}/schema.yaml"
+  /data-contracts/{contractId}/schema/{schemaId}:
+    $ref: "./paths/data-contracts/{contractId}/schema/{schemaId}.yaml"
+  /data-contracts/{contractId}/schema/{schemaId}/properties:
+    $ref: "./paths/data-contracts/{contractId}/schema/{schemaId}/properties.yaml"
+  /data-contracts/{contractId}/schema/{schemaId}/properties/{propertyId}:
+    $ref: "./paths/data-contracts/{contractId}/schema/{schemaId}/properties/{propertyId}.yaml"
+
+  /invites:
+    $ref: "./paths/invites.yaml"
+  /invites/{inviteId}:
+    $ref: "./paths/invites/{inviteId}.yaml"
+  /invites/{inviteId}/status:
+    $ref: "./paths/invites/{inviteId}/status.yaml"
+
+  /.well-known/collaboration-spaces/{spaceId}/webid:
+    $ref: "./paths/well-known/collaboration-spaces/{spaceId}/webid.yaml"
+  /.well-known/collaboration-spaces/{spaceId}/appid:
+    $ref: "./paths/well-known/collaboration-spaces/{spaceId}/appid.yaml"
+  /.well-known/clients/{clientLabel}:
+    $ref: "./paths/well-known/clients/{clientLabel}.yaml"
+
+components:
+  schemas:
+    CollaborationSpace:
+      $ref: "./schemas/collaboration-space/CollaborationSpace.yaml"
+    CollaborationSpaceCreate:
+      $ref: "./schemas/collaboration-space/CollaborationSpaceCreate.yaml"
+    Collaborator:
+      $ref: "./schemas/collaboration-space/Collaborator.yaml"
+    CollaboratorCreate:
+      $ref: "./schemas/collaboration-space/CollaboratorCreate.yaml"
+    Developer:
+      $ref: "./schemas/Developer.yaml"
+    DataContract:
+      $ref: "./schemas/data-contract/DataContract.yaml"
+    DataContractCreate:
+      $ref: "./schemas/data-contract/DataContractCreate.yaml"
+    Schema:
+      $ref: "./schemas/data-contract/Schema.yaml"
+    SchemaCreate:
+      $ref: "./schemas/data-contract/SchemaCreate.yaml"
+    Property:
+      $ref: "./schemas/data-contract/Property.yaml"
+    PropertyCreate:
+      $ref: "./schemas/data-contract/PropertyCreate.yaml"
+    DataQuality:
+      $ref: "./schemas/data-contract/data-quality/DataQuality.yaml"
+    Server:
+      $ref: "./schemas/data-contract/server/ODCSServer.yaml"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Collaboration Spaces
+    description: "Endpoints related to collaboration spaces: CRUD and operating the space"
+  - name: Cages
+    description: Endpoints related to operating and monitoring cages
+  - name: Invites
+    description: Endpoints related to invitations to collaborate in collaboration spaces
+  - name: Data Contracts
+    description: Endpoints related to CRUD update of data contracts using ODCS (v3)
+  - name: Clients
+    description: Endpoints related to clients
+  - name: Public
+    description: Endpoints without authentication

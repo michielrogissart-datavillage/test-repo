@@ -1,0 +1,10 @@
+type: object
+properties:
+  roles:
+    type: array
+    items:
+      type: string
+  clientId:
+    type: string
+required:
+  - clientId

@@ -1,0 +1,10 @@
+allOf:
+  - $ref: ./AbstractCollaborationSpace.yaml
+  - type: object
+    properties: 
+      collaborators:
+        type: array
+        items:
+          $ref: "./CollaboratorCreate.yaml"
+    required:  
+      - name

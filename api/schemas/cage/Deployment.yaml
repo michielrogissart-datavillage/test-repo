@@ -1,0 +1,10 @@
+type: object
+properties:
+  status: 
+    type: string
+    enum: [deployed, failed, pending, missing, unknown]
+  pods:
+    type: array
+    items:
+      $ref: "./PodStatus.yaml"
+required: ['status']

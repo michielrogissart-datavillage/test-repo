@@ -1,0 +1,24 @@
+get:
+  operationId: GetPublicKey
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Cages
+  title: Get Public Key
+  description: Get the public key linked to a collaboration space
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaboration space.
+  responses:
+    "200":
+      description: The public key.
+      content:
+        text/plain:
+          schema:
+    "401":
+      $ref: "../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../schemas/NotFoundError.yaml"

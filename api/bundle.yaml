@@ -1,0 +1,1672 @@
+openapi: 3.0.0
+info:
+  title: ControlPlane API
+  version: latest
+servers:
+  - url: https://<control-plane-api>
+security:
+  - bearerAuth: []
+tags:
+  - name: Collaboration Spaces
+    description: 'Endpoints related to collaboration spaces: CRUD and operating the space'
+  - name: Cages
+    description: Endpoints related to operating and monitoring cages
+  - name: Authentication
+    description: The account that performs actions in the Control Plane
+  - name: Data Contracts
+    description: Endpoints related to CRUD update of data contracts using ODCS (v3)
+  - name: Clients
+    description: Endpoints related to clients
+  - name: Public
+    description: Endpoints without authentication
+paths:
+  /auth/currentCredentials:
+    get:
+      operationId: getCurrentCredentials
+      summary: Get Current Credentials
+      tags:
+        - Authentication
+      description: Get details about the authenticated account.
+      responses:
+        '200':
+          description: The description of the authenticated developer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Developer'
+  /collaboration-spaces:
+    get:
+      operationId: GetCollaborationSpaces
+      summary: Get Collaboration Spaces
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      description: Get all collaboration spaces the user has access to.
+      responses:
+        '200':
+          description: The models of the collaboration spaces.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CollaborationSpace'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      operationId: CreateCollaborationSpace
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Create Collaboration Space
+      description: Create a new collaboration space owned by the client the user is authenticated for.
+      requestBody:
+        description: The model of the space to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollaborationSpaceCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /collaboration-spaces/{spaceId}:
+    get:
+      operationId: GetCollaborationSpace
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Get Collaboration Space
+      description: |
+        Get a collaboration space by ID. Allowed if the client either owns it or is a collaborator.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaboration space.
+      responses:
+        '200':
+          description: The model of the collaboration space.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollaborationSpace'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      operationId: UpdateCollaborationSpace
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Update a collaboration space by ID. Allowed if the client owns the space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space to update.
+      requestBody:
+        description: The fields of the model to update. Nested objects will be overwritten when specified.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollaborationSpaceUpdate'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    delete:
+      operationId: DeleteCollaborationSpace
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Delete Collaboration Space
+      description: Delete a collaboration space by id. Allowed if the client owns the space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space to delete.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/invite:
+    post:
+      operationId: InviteCollaborator
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Invite Collaborator
+      description: Invite another client as a collaborator of a space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space where the client is invited.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/collaborators:
+    get:
+      operationId: GetCollaborators
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Get Collaborators
+      description: Get all collaborators of a collaboration space. Allowed if the client owns it or is a collaborator.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaboration space.
+      responses:
+        '200':
+          description: The models of the collaborators in the space.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Collaborator'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    post:
+      operationId: CreateCollaborator
+      tags:
+        - Collaboration Spaces
+      summary: Create Collaborator
+      description: Add a new collaborator to a collaboration space. Allowed if the client owns the space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space to add a collaborator to.
+      requestBody:
+        description: The model of the collaborator to create.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollaboratorCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/collaborators/{collaboratorId}:
+    get:
+      operationId: GetCollaborator
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Get Collaborator
+      description: Get a collaborator by ID. Allowed if the client is owner or collaborator of the collaboration space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space of the collaborator.
+        - in: path
+          name: collaboratorId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaborator.
+      responses:
+        '200':
+          description: The description of the collaborator.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collaborator'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      operationId: UpdateCollaborator
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Update Collaborator
+      description: Update a collaborator by ID. Allowed if the client owns the collaborator.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space of the collaborator.
+        - in: path
+          name: collaboratorId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaborator to update.
+      requestBody:
+        description: The properties to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollaboratorUpdate'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    delete:
+      operationId: DeleteCollaborator
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Delete Collaborator
+      description: Delete a collaborator by ID. Allowed if the client owns the collaborator.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space of the collaborator.
+        - in: path
+          name: collaboratorId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaborator.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/public-key:
+    get:
+      operationId: GetPublicKey
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      title: Get Public Key
+      description: Get the public key linked to a collaboration space
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaboration space.
+      responses:
+        '200':
+          description: The public key.
+          content:
+            text/plain:
+              schema: null
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/event:
+    post:
+      operationId: PublishEvent
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      summary: Publish Event
+      description: Publish an event to the confidential environment of the collaboration space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space to handle the event.
+        - in: query
+          name: stream
+          schema:
+            type: string
+          required: false
+          default: events
+          description: The stream to add the event to.
+      requestBody:
+        description: The event to handle.
+        name: event
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+              required:
+                - type
+              additionalProperties: true
+      responses:
+        '200':
+          description: The ID of the event that has been published.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messageId:
+                    type: string
+                required:
+                  - messageId
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/deploy:
+    post:
+      operationId: DeployCage
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Cages
+      summary: Deploy Cage
+      description: Starts a confidential cluster if necessary and deploys the version of the algorithm as configured in the collaboration space model.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space for which to deploy a cage.
+      responses:
+        '200':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/cage:
+    delete:
+      operationId: DeleteCage
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Cages
+      summary: Delete Cage
+      description: Shut down the confidential cluster running the algorithm of a collaboration space.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space associated with the trusted environment.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/attestation-token:
+    get:
+      operationId: GetAttestationReport
+      summary: Get Attestation Report
+      description: Get an attestation report of the virtual machine
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Collaboration Spaces
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaboration space.
+        - in: query
+          name: nonce
+          description: |
+            A nonce to add to the attestation report: * fingerpint: Attach a hex-encoded SHA-256 fingerprint of the public key
+          schema:
+            type: string
+            enum:
+              - fingerprint
+          required: false
+      responses:
+        '200':
+          description: An attestation report.
+          content:
+            text/plain:
+              schema: null
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/resources/{path}:
+    put:
+      operationId: UploadResource
+      x-ogen-operation-group: CollaborationSpaces
+      tags:
+        - Cages
+      summary: Upload Resource
+      description: Stores the content of the request as a file in the resources of the cage. If the file already exists, it will be overwritten.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space associated with the cage.
+        - in: path
+          name: path
+          schema:
+            type: string
+          required: true
+          description: The path where in the filestore of the cage to save the file to.
+      requestBody:
+        description: The content of the file to upload to the cage.
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/logs/algo:
+    get:
+      operationId: GetAlgorithmLogs
+      x-ogen-operation-group: CollaborationSpaces
+      summary: Get Algorithm Logs
+      description: Get `tail_lines` most recent lines of the output written by the algorithm.
+      tags:
+        - Cages
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space associated with the cage.
+        - in: query
+          name: tail_lines
+          schema:
+            type: integer
+          required: false
+          description: Number of lines to return.
+      responses:
+        '200':
+          description: List of `tail_lines` most recent algorithm logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/logs/deployment:
+    get:
+      operationId: GetDeploymentLogs
+      x-ogen-operation-group: CollaborationSpaces
+      summary: Get Deployment Logs
+      description: Get `tail_lines` most recent lines of the output generated by the deployment of a cage.
+      tags:
+        - Cages
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space associated with the cage.
+        - in: query
+          name: tail_lines
+          schema:
+            type: integer
+          required: false
+          description: Number of lines to return.
+      responses:
+        '200':
+          description: List of `tail_lines` most recent deployment logs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /collaboration-spaces/{spaceId}/logs/pod-status:
+    get:
+      operationId: GetPodStatusses
+      x-ogen-operation-group: CollaborationSpaces
+      summary: Get Pod Status
+      description: Get the status of all current pods in the confidential cluster running the algorithm of a collaboration space.
+      tags:
+        - Cages
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space associated with the confidential cluster.
+      responses:
+        '200':
+          description: List of status of pods.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PodStatus'
+          headers:
+            Signature:
+              description: Base64 encoding of the response body signed by the secret manager
+              required: false
+              schema:
+                type: string
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /data-contracts:
+    get:
+      tags:
+        - Data Contracts
+      operationId: GetDataContracts
+      x-ogen-operation-group: DataContracts
+      summary: Get Data Contracts
+      description: Get all data contracts your account has access to, optionally filtering by name.
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: The name filter. Filtering is case insensitive.
+      responses:
+        '200':
+          description: The summary of the contracts that matched the filter.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DataContractSummary'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - Data Contracts
+      operationId: CreateDataContract
+      x-ogen-operation-group: DataContracts
+      summary: Create Data Contract
+      description: Create a new data contract based on an ODCS description. It will be owned by the client the account is authenticated for.
+      requestBody:
+        description: The ODCS properties of the new data contract.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataContractCreate'
+          application/yaml:
+            schema:
+              $ref: '#/components/schemas/DataContractCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /data-contracts/{contractId}:
+    get:
+      tags:
+        - Data Contracts
+      operationId: GetDataContract
+      x-ogen-operation-group: DataContracts
+      summary: Get Data Contract
+      description: Get a data contract by ID.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested data contract
+      responses:
+        '200':
+          description: The ODCS description of the data contract.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataContract'
+            application/yaml:
+              schema:
+                $ref: '#/components/schemas/DataContract'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      tags:
+        - Data Contracts
+      operationId: UpdateDataContract
+      x-ogen-operation-group: DataContracts
+      summary: Update Data Contract
+      description: Update ODCS properties of a data contract by ID. Nested fields are overwritten when specified. Allowed if the client is the owner.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract to update.
+      requestBody:
+        description: The ODCS properties to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataContractUpdate'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    delete:
+      tags:
+        - Data Contracts
+      operationId: DeleteDataContract
+      summary: Delete Data Contract
+      description: Delete a data contract by ID. Allowed if the client owns the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract to delete.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /data-contracts/{contractId}/schema:
+    post:
+      tags:
+        - Data Contracts
+      operationId: CreateSchema
+      x-ogen-operation-group: DataContracts
+      summary: Create Schema
+      description: Create a new schema based on an ODCS description. Allowed if the client is the owner of the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract to add the schema to.
+      requestBody:
+        description: The ODCS properties of the schema.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /data-contracts/{contractId}/schema/{schemaId}:
+    get:
+      tags:
+        - Data Contracts
+      operationId: GetSchema
+      x-ogen-operation-group: DataContracts
+      summary: Get Schema
+      description: Get the ODCS description of a schema by ID.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract where the schema can be found.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested schema.
+      responses:
+        '200':
+          description: The ODCS description of the schema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schema'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      tags:
+        - Data Contracts
+      summary: Update Schema
+      operationId: UpdateSchema
+      description: Update ODCS properties of a schema by ID. Nested fields will be overwritten if specified. Allowed if the client owns the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract where the schema can be found.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          description: The ID of the schema to update.
+          required: true
+      requestBody:
+        description: The ODCS properties to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchemaUpdate'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    delete:
+      tags:
+        - Data Contracts
+      summary: Delete Schema
+      operationId: DeleteSchema
+      description: Delete a schema by ID. Allowed if the client owns the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract where the schema can be found.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          required: true
+          description: The ID of the schema to delete.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /data-contracts/{contractId}/schema/{schemaId}/properties:
+    post:
+      tags:
+        - Data Contracts
+      summary: Create Property
+      x-ogen-operation-group: DataContracts
+      operationId: CreateProperty
+      description: Create a new property based on an ODCS description. Allowed if the client is the owner of the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract to add a property to.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          required: true
+          description: The ID of the schema in the contract where to add the property to.
+      requestBody:
+        description: The ODCS properties of the property.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyCreate'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreatedResource'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /data-contracts/{contractId}/schema/{schemaId}/properties/{propertyId}:
+    get:
+      tags:
+        - Data Contracts
+      summary: Get Property
+      x-ogen-operation-group: DataContracts
+      operationId: GetProperty
+      description: Get the ODCS description of a property by ID.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract where the property can be found.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          description: The ID of the schema in the contract where the property can be found.
+          required: true
+        - in: path
+          name: propertyId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested property.
+      responses:
+        '200':
+          description: The ODCS description of the property.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    patch:
+      tags:
+        - Data Contracts
+      summary: Update Property
+      x-ogen-operation-group: DataContracts
+      operationId: UpdateProperty
+      description: Update ODCS properties of a property by ID. Allowed if the client owns the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract where the property can be found.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          description: The ID of the schema in the data contract where the property can be found.
+          required: true
+        - in: path
+          name: propertyId
+          schema:
+            type: string
+          required: true
+          description: The ID of the property to update.
+      requestBody:
+        description: The ODCS properties to update.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropertyUpdate'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+    delete:
+      tags:
+        - Data Contracts
+      summary: Delete Property
+      x-ogen-operation-group: DataContracts
+      operationId: DeleteProperty
+      description: Delete a property by ID. Allowed if the client owns the contract.
+      parameters:
+        - in: path
+          name: contractId
+          schema:
+            type: string
+          required: true
+          description: The ID of the data contract where the property can be found.
+        - in: path
+          name: schemaId
+          schema:
+            type: string
+          required: true
+          description: The ID of the schema in the contract where the property can be found.
+        - in: path
+          name: propertyId
+          schema:
+            type: string
+          required: true
+          description: The ID of the property to delete.
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /clients/{clientId}/notifications:
+    get:
+      operationId: GetNotifications
+      x-ogen-operation-group: Clients
+      tags:
+        - Clients
+      summary: Get Notifications
+      description: Get all notifications related to a client
+      parameters:
+        - in: path
+          name: clientId
+          schema:
+            type: string
+          required: true
+          description: The requested client.
+      responses:
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /.well-known/collaboration-spaces/{spaceId}/webid:
+    get:
+      security: []
+      operationId: GetCollaborationSpaceWebId
+      x-ogen-operation-group: WellKnown
+      tags:
+        - Public
+      summary: Get WebId Document
+      description: Get the turtle document describing the collaboration space as an agent in a Solid eco-system. The URI serves as WebID of the agent.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the collaboration space associated with the WebID.
+      responses:
+        '200':
+          description: The WebId document conform the Solid specifications, serialized in turtle format.
+          content:
+            text/turtle:
+              schema:
+                type: string
+                example: |
+                  @prefix foaf: <http://xmlns.com/foaf/0.1/>.
+                  @prefix solid: <http://www.w3.org/ns/solid/terms#>.
+                  @prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+
+                  <https://api.gke.datavillage.me/.well-known/collaboration-spaces/abcd/webid>
+                    a foaf:Agent ;
+                    solid:oidcIssuer   <https://solid-idp.datavillage.me> ;
+                    skos:prefLabel "Test collaboration space";
+                    foaf:logo <https://client.example/logo.png>;
+                    foaf:homepage <https://client.example/>.
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /.well-known/collaboration-spaces/{spaceId}/appid:
+    get:
+      security: []
+      operationId: GetCollaborationSpaceAppId
+      x-ogen-operation-group: WellKnown
+      tags:
+        - Public
+      summary: Get AppId Document
+      description: Get the JSON-LD application document to authenticate the application in a Solid eco-system.
+      parameters:
+        - in: path
+          name: spaceId
+          schema:
+            type: string
+          required: true
+          description: The ID of the requested collaboration space associated with the AppID.
+      responses:
+        '200':
+          description: The AppId document serialized as JSON-LD conform the Solid specifications.
+          content:
+            application/ld+json:
+              schema:
+                type: string
+                example: |
+                  {
+                    "@context": "https://www.w3.org/ns/solid/oidc-context.jsonld",
+                    "client_id": "https://api.gke.datavillage.me/.well-known/collaboration-spaces/abcd/appid",
+                    "redirect_uris": [],
+                    "scope": "openid webid",
+                    "grant_types": ["password"],
+                    "client_name": "Test collaboration space - application",
+                    "logo_uri": "https://client.example/logo.png"
+                  }
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+  /.well-known/clients/{clientLabel}:
+    get:
+      operationId: GetClient
+      x-ogen-operation-group: WellKnown
+      security: []
+      tags:
+        - Public
+      summary: Get Client Info
+      description: Get public information about a client based on a human readable label.
+      parameters:
+        - in: path
+          name: clientLabel
+          required: true
+          schema:
+            type: string
+          description: A human readable label that uniquely identifies the client.
+      responses:
+        '200':
+          description: Public information about the client.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                    description: The IDP the client uses to authenticate its developers.
+                required:
+                  - issuer
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+components:
+  schemas:
+    CollaborationSpace:
+      allOf:
+        - $ref: '#/components/schemas/AbstractCollaborationSpace'
+        - type: object
+          properties:
+            id:
+              type: string
+            collaborators:
+              type: array
+              items:
+                $ref: '#/components/schemas/Collaborator'
+          required:
+            - id
+            - name
+    CollaborationSpaceCreate:
+      allOf:
+        - $ref: '#/components/schemas/AbstractCollaborationSpace'
+        - type: object
+          properties:
+            collaborators:
+              type: array
+              items:
+                $ref: '#/components/schemas/CollaboratorCreate'
+          required:
+            - name
+    Collaborator:
+      description: Collaborator
+      allOf:
+        - $ref: '#/components/schemas/AbstractCollaborator'
+        - type: object
+          properties:
+            id:
+              type: string
+          required:
+            - id
+            - clientId
+    CollaboratorCreate:
+      description: CollaboratorCreate
+      allOf:
+        - $ref: '#/components/schemas/AbstractCollaborator'
+        - type: object
+          required:
+            - clientId
+    Developer:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
+        clientId:
+          type: string
+      required:
+        - clientId
+    DataContract:
+      title: Data Contract
+      description: ODCS compliant description of a data contract with metadata fields added by Datavillage DCP
+      allOf:
+        - $ref: '#/components/schemas/DataContractDV'
+        - type: object
+          properties:
+            dataContract:
+              allOf:
+                - $ref: '#/components/schemas/AbstractDataContract'
+                - type: object
+                  properties:
+                    schema:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Schema'
+                  required:
+                    - version
+                    - name
+                    - status
+                    - id
+                    - apiVersion
+                    - kind
+          required:
+            - dataContract
+    DataContractCreate:
+      title: Data Contract Create
+      description: ODCS description of a data contract
+      allOf:
+        - $ref: '#/components/schemas/AbstractDataContract'
+        - type: object
+          properties:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SchemaCreate'
+          required:
+            - version
+            - name
+            - status
+            - id
+            - apiVersion
+            - kind
+    Schema:
+      title: Schema
+      description: Identifiable ODCS description of a schema
+      allOf:
+        - $ref: '#/components/schemas/AbstractSchema'
+        - type: object
+          properties:
+            _id:
+              type: string
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/Property'
+          required:
+            - name
+            - _id
+    SchemaCreate:
+      title: Schema Create
+      description: ODCS description of a schema
+      allOf:
+        - $ref: '#/components/schemas/AbstractSchema'
+        - type: object
+          properties:
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/PropertyCreate'
+          required:
+            - name
+    Property:
+      title: Property
+      description: Identifiable ODCS description of a property
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+        - type: object
+          properties:
+            _id:
+              type: string
+          required:
+            - name
+            - _id
+    PropertyCreate:
+      title: Property Create
+      description: ODCS compliant description of a property
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+        - type: object
+          required:
+            - name
+    AbstractCollaborationSpace:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+    CollaboratorRoleCodeProvider:
+      type: object
+      x-ogen-name: CodeProvider
+      description: Someone who provides code
+      properties:
+        role:
+          type: string
+          example: CodeProvider
+        settings:
+          type: object
+          properties:
+            description:
+              type: string
+        source:
+          type: object
+          required:
+            - registry
+            - image
+            - tag
+          properties:
+            registry:
+              type: string
+            image:
+              type: string
+            tag:
+              type: string
+            secret:
+              type: string
+              description: A value that will be interpreted as an ImagePullSecret. An example would be a github access token that has at least the scope `packages:read`, base64 encoded as `username:token`. If no value is provided no ImagePullSecret will be used when deploying the cage.
+    CollaboratorRoleDataProvider:
+      type: object
+      x-ogen-name: DataProvider
+      description: Someone who provides Data
+      properties:
+        role:
+          type: string
+          example: DataProvider
+        settings:
+          type: object
+          properties:
+            description:
+              type: string
+    CollaboratorRoleDataConsumer:
+      type: object
+      x-ogen-name: DataConsumer
+      description: Someone who consumes data
+      properties:
+        role:
+          type: string
+          example: DataConsumer
+        settings:
+          type: object
+          properties:
+            description:
+              type: string
+    AbstractCollaborator:
+      type: object
+      description: Abstract Collaborator
+      properties:
+        clientId:
+          type: string
+        name:
+          type: string
+          description: A name given the collaborator. This value is intended to be read by humans.
+          example: My Collaborator
+        label:
+          type: string
+          description: A label given the collaborator. This value is intended to refered to in code.
+          example: my-collaborator
+        configuration:
+          description: A configuration of the collaborator. This is an object representing key-value pairs that will be available in the cage as environment variables.
+          type: object
+          additionalProperties:
+            type: string
+      discriminator:
+        propertyName: role
+        mapping:
+          CodeProvider: '#/components/schemas/CollaboratorRoleCodeProvider'
+          DataProvider: '#/components/schemas/CollaboratorRoleDataProvider'
+          DataConsumer: '#/components/schemas/CollaboratorRoleDataConsumer'
+      oneOf:
+        - $ref: '#/components/schemas/CollaboratorRoleCodeProvider'
+        - $ref: '#/components/schemas/CollaboratorRoleDataProvider'
+        - $ref: '#/components/schemas/CollaboratorRoleDataConsumer'
+    CollaborationSpaceUpdate:
+      allOf:
+        - $ref: '#/components/schemas/AbstractCollaborationSpace'
+        - type: object
+          properties:
+            collaborators:
+              type: array
+              items:
+                $ref: '#/components/schemas/CollaboratorCreate'
+    CollaboratorUpdate:
+      description: Collaborator Update
+      allOf:
+        - $ref: '#/components/schemas/AbstractCollaborator'
+    PodStatus:
+      type: object
+      required:
+        - name
+        - status
+        - imageId
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+        status_since:
+          type: string
+          format: date-time
+        imageIds:
+          type: array
+          items:
+            type: string
+    DataContractDV:
+      description: Metadata added to data contracts by Datavillage DCP
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier used in the Datavillage DCP to identify a data contract
+        clientId:
+          type: string
+          description: Id of the client owning the data contract
+      required:
+        - id
+        - clientId
+    DataContractSummary:
+      title: Data Contract Summary
+      description: The metadata fields added by Datavillage DCP along with key properties of ODCS description
+      allOf:
+        - $ref: '#/components/schemas/DataContractDV'
+        - type: object
+          properties:
+            dataContractSummary:
+              type: object
+              properties:
+                version:
+                  type: string
+                  description: Current version of the data contract.
+                name:
+                  type: string
+                  description: Name of the data contract.
+                status:
+                  type: string
+                  description: Current status of the dataset. Valid values are `production`, `test`, or `development`.
+                  example:
+                    - production
+                    - test
+                    - development
+              required:
+                - version
+                - name
+                - status
+        - required:
+            - dataContractSummary
+    AbstractDataContract:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Current version of the data contract.
+        name:
+          type: string
+          description: Name of the data contract.
+        status:
+          type: string
+          description: Current status of the dataset. Valid values are `production`, `test`, or `development`.
+          example:
+            - production
+            - test
+            - development
+        id:
+          type: string
+          description: |
+            A unique identifier used to reduce the risk of dataset name collisions, such as a UUID. This only has meaning for the data owner and is not used to identify data contracts in the Datavillage DCP
+        apiVersion:
+          type: string
+          description: Version of the standard used to build data contract. Default value is v3.0.0.
+          default: v3.0.0
+          enum:
+            - v3.0.0
+            - v2.2.2
+            - v2.2.1
+            - v2.2.0
+        kind:
+          type: string
+          default: DataContract
+          enum:
+            - DataContract
+    Element:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the element.
+        physicalType:
+          type: string
+          description: The physical element data type in the data source.
+          example:
+            - table
+            - view
+            - topic
+            - file
+        description:
+          type: string
+          description: Description of the element.
+        businessName:
+          type: string
+          description: The business name of the element.
+    AbstractSchema:
+      allOf:
+        - $ref: '#/components/schemas/Element'
+        - type: object
+          properties:
+            logicalType:
+              type: string
+              description: The logical element data type.
+              enum:
+                - object
+            physicalName:
+              type: string
+              description: Physical name.
+              example:
+                - table_1_2_0
+            dataGranularityDescription:
+              type: string
+              description: Granular level of the data in the object.
+              example:
+                - Aggregation by country
+    AbstractProperty:
+      properties:
+        examples:
+          type: array
+          description: List of sample element values.
+          items:
+            anyOf:
+              - type: string
+              - type: number
+              - type: integer
+              - type: boolean
+              - type: array
+              - type: object
+      allOf:
+        - $ref: '#/components/schemas/Element'
+        - type: object
+          properties:
+            primaryKey:
+              type: boolean
+              description: Boolean value specifying whether the element is primary or not. Default is false.
+            primaryKeyPosition:
+              type: integer
+              description: If element is a primary key, the position of the primary key element. Starts from 1. Example of `account_id, name` being primary key columns, `account_id` has primaryKeyPosition 1 and `name` primaryKeyPosition 2. Default to -1.
+            logicalType:
+              type: string
+              description: The logical element data type.
+              enum:
+                - string
+                - date
+                - number
+                - integer
+                - object
+                - array
+                - boolean
+            logicalTypeOptions:
+              type: object
+              description: Additional optional metadata to describe the logical type.
+            physicalType:
+              type: string
+              description: The physical element data type in the data source. For example, VARCHAR(2), DOUBLE, INT.
+            required:
+              type: boolean
+              description: Indicates if the element may contain Null values; possible values are true and false. Default is false.
+            unique:
+              type: boolean
+              description: Indicates if the element contains unique values; possible values are true and false. Default is false.
+            partitioned:
+              type: boolean
+              description: Indicates if the element is partitioned; possible values are true and false.
+            partitionKeyPosition:
+              type: integer
+              description: If element is used for partitioning, the position of the partition element. Starts from 1. Example of `country, year` being partition columns, `country` has partitionKeyPosition 1 and `year` partitionKeyPosition 2. Default to -1.
+            classification:
+              type: string
+              description: Can be anything, like confidential, restricted, and public to more advanced categorization. Some companies like PayPal, use data classification indicating the class of data in the element; expected values are 1, 2, 3, 4, or 5.
+              example:
+                - confidential
+                - restricted
+                - public
+            encryptedName:
+              type: string
+              description: The element name within the dataset that contains the encrypted element value. For example, unencrypted element `email_address` might have an encryptedName of `email_address_encrypt`.
+            transformSourceObjects:
+              type: array
+              description: List of objects in the data source used in the transformation.
+              items:
+                type: string
+            transformLogic:
+              type: string
+              description: Logic used in the element transformation.
+            transformDescription:
+              type: string
+              description: Describes the transform logic in very simple terms.
+            criticalDataElement:
+              type: boolean
+              description: True or false indicator; If element is considered a critical data element (CDE) then true else false.
+    DataContractUpdate:
+      title: Data Contract Update
+      description: ODCS properties of a data contract where schemas should comply
+      allOf:
+        - $ref: '#/components/schemas/AbstractDataContract'
+        - type: object
+          properties:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SchemaCreate'
+    SchemaUpdate:
+      title: Schema Update
+      description: ODCS properties of a schema where 'properties'-property should comply
+      allOf:
+        - $ref: '#/components/schemas/AbstractSchema'
+        - type: object
+          properties:
+            properties:
+              type: array
+              items:
+                $ref: '#/components/schemas/PropertyCreate'
+    PropertyUpdate:
+      title: Update Property
+      description: ODCS properties of a property
+      allOf:
+        - $ref: '#/components/schemas/AbstractProperty'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: User is not authenticated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error_message:
+                type: string
+            required:
+              - error_message
+    CreatedResource:
+      description: Resource was created successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+            required:
+              - id
+      headers:
+        Location:
+          required: true
+          schema:
+            type: string
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error_message:
+                type: string
+                default: Document not found
+            required:
+              - error_message
+    NoContent:
+      description: Request executed successfully
+    BadRequestError:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error_message:
+                type: string
+            required:
+              - error_message

@@ -1,0 +1,112 @@
+get:
+  tags:
+    - Data Contracts
+  summary: Get Property
+  x-ogen-operation-group: DataContracts
+  operationId: GetProperty
+  description: Get the ODCS description of a property by ID.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract where the property can be found.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      description: The ID of the schema in the contract where the property can be found.
+      required: true
+    - in: path
+      name: propertyId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested property.
+  responses:
+    "200":
+      description: The ODCS description of the property.
+      content:
+        application/json:
+          schema:
+            $ref: "../../../../../../schemas/data-contract/Property.yaml"
+    "401":
+      $ref: "../../../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../../../schemas/NotFoundError.yaml"
+
+patch:
+  tags:
+    - Data Contracts
+  summary: Update Property
+  x-ogen-operation-group: DataContracts
+  operationId: UpdateProperty
+  description: Update ODCS properties of a property by ID. Allowed if the client owns the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract where the property can be found.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      description: The ID of the schema in the data contract where the property can be found.
+      required: true
+    - in: path
+      name: propertyId
+      schema:
+        type: string
+      required: true
+      description: The ID of the property to update.
+  requestBody:
+    description: The ODCS properties to update.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../../../schemas/data-contract/PropertyUpdate.yaml"
+  responses:
+    "204":
+      $ref: "../../../../../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../../../schemas/NotFoundError.yaml"
+
+delete:
+  tags:
+    - Data Contracts
+  summary: Delete Property
+  x-ogen-operation-group: DataContracts
+  operationId: DeleteProperty
+  description: Delete a property by ID. Allowed if the client owns the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract where the property can be found.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      required: true
+      description: The ID of the schema in the contract where the property can be found.
+    - in: path
+      name: propertyId
+      schema:
+        type: string
+      required: true
+      description: The ID of the property to delete.
+  responses:
+    "204":
+      $ref: "../../../../../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../../../schemas/NotFoundError.yaml"

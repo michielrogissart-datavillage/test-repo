@@ -1,0 +1,10 @@
+description: Bad request
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        error_message:
+          type: string
+      required:
+        - error_message

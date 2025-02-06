@@ -1,0 +1,18 @@
+# The data contract as how it is kept in the database
+title: Data Contract
+description: ODCS compliant description of a data contract with metadata fields added by Datavillage DCP
+allOf:
+  - $ref: "./DataContractDV.yaml"
+  - type: object
+    properties:
+      dataContract:
+        allOf:
+          - $ref: "./AbstractDataContract.yaml"
+          - type: object
+            properties:
+              schema:
+                type: array
+                items:
+                  $ref: "Schema.yaml"
+            required: [version, name, status, id, apiVersion, kind]
+    required: [dataContract]

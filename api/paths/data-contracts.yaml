@@ -1,0 +1,47 @@
+get:
+  tags:
+    - Data Contracts
+  operationId: GetDataContracts
+  x-ogen-operation-group: DataContracts
+  summary: Get Data Contracts
+  description: Get all data contracts your account has access to, optionally filtering by name.
+  parameters:
+    - in: query
+      name: name
+      schema:
+        type: string
+      description: The name filter. Filtering is case insensitive.
+  responses:
+    "200":
+      description: The summary of the contracts that matched the filter.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/data-contract/DataContractSummary.yaml"
+    "401":
+      $ref: "../schemas/UnauthorizedError.yaml"
+
+post:
+  tags:
+    - Data Contracts
+  operationId: CreateDataContract
+  x-ogen-operation-group: DataContracts
+  summary: Create Data Contract
+  description: Create a new data contract based on an ODCS description. It will be owned by the client the account is authenticated for.
+  requestBody:
+    description: The ODCS properties of the new data contract.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/data-contract/DataContractCreate.yaml"
+      application/yaml:
+        schema:
+          $ref: "../schemas/data-contract/DataContractCreate.yaml"
+  responses:
+    "201":
+      $ref: "../schemas/CreatedResource.yaml"
+    "401":
+      $ref: "../schemas/UnauthorizedError.yaml"

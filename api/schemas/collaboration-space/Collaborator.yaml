@@ -1,0 +1,8 @@
+description: Collaborator
+allOf:
+  - $ref: ./AbstractCollaborator.yaml
+  - type: object
+    properties:
+      id: 
+        type: string
+    required: [id, clientId]

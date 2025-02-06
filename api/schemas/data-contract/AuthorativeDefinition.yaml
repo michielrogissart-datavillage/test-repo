@@ -1,0 +1,18 @@
+type: object
+description: Link to source that provides more details on the dataset; examples would be a link to an external definition, a training video, a GitHub repo, Collibra, or another tool. Authoritative definitions follow the same structure in the standard.
+properties:
+  url:
+    type: string
+    description: URL to the authority.
+  type:
+    type: string
+    description: "Type of definition for authority: v2.3 adds standard values: `businessDefinition`, `transformationImplementation`, `videoTutorial`, `tutorial`, and `implementation`."
+    examples:
+      - businessDefinition
+      - transformationImplementation
+      - videoTutorial
+      - tutorial
+      - implementation
+required:
+  - url
+  - type

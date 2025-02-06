@@ -1,0 +1,28 @@
+post:
+  tags:
+    - Data Contracts
+  operationId: CreateSchema
+  x-ogen-operation-group: DataContracts
+  summary: Create Schema
+  description: Create a new schema based on an ODCS description. Allowed if the client is the owner of the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract to add the schema to.
+  requestBody:
+    description: The ODCS properties of the schema.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../../schemas/data-contract/SchemaCreate.yaml"
+  responses:
+    "201":
+      $ref: "../../../schemas/CreatedResource.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

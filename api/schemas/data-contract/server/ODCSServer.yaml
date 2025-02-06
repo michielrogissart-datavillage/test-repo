@@ -1,0 +1,26 @@
+type: object
+description: Data source details of where data is physically stored.
+discriminator:
+  propertyName: type
+  mapping:
+    api: ./ApiServer.yaml
+    custom: ./CustomServer.yaml
+oneOf:
+  - $ref: ./ApiServer.yaml
+  - $ref: ./CustomServer.yaml
+properties:
+  server:
+    type: string
+    description: Identifier of the server.
+  description:
+    type: string
+    description: Description of the server.
+  environment:
+    type: string
+    description: Environment of the server.
+    examples:
+      - prod
+      - preprod
+      - dev
+      - uat
+required: [server]

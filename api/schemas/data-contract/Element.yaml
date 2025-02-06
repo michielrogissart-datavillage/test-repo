@@ -1,0 +1,27 @@
+# Taken from ODCS specs: an element in a schema definition
+type: object
+properties:
+  name:
+    type: string
+    description: Name of the element.
+  physicalType:
+    type: string
+    description: The physical element data type in the data source.
+    example:
+      - table
+      - view
+      - topic
+      - file
+  description:
+    type: string
+    description: Description of the element.
+  businessName:
+    type: string
+    description: The business name of the element.
+  tags:
+    type: array
+    items:
+      type: string
+    description: A list of tags that may be assigned to the elements (object or property); the tags keyword may appear at any level.
+  quality:
+    $ref: "data-quality/DataQuality.yaml"

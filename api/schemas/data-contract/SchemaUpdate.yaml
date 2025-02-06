@@ -1,0 +1,10 @@
+title: Schema Update
+description: ODCS properties of a schema where 'properties'-property should comply
+allOf:
+  - $ref: AbstractSchema.yaml
+  - type: object
+    properties:
+      properties:
+        type: array
+        items:
+          $ref: PropertyCreate.yaml

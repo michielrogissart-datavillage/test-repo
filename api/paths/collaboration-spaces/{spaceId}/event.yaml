@@ -1,0 +1,53 @@
+post:
+  operationId: PublishEvent
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Cages
+  summary: Publish Event
+  description: Publish an event to the confidential environment of the collaboration space.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space to handle the event.
+    - in: query
+      name: stream
+      schema:
+        type: string
+      required: false
+      default: events
+      description: The stream to add the event to.
+  requestBody:
+    description: The event to handle.
+    name: event
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            type:
+              type: string
+          required:
+            - type
+          additionalProperties: true
+  responses:
+    "200":
+      description: The ID of the event that has been published.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              messageId:
+                type: string
+            required:
+              - messageId
+    "400":
+      $ref: "../../../schemas/BadRequestError.yaml"
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

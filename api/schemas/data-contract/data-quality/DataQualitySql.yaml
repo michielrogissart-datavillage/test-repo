@@ -1,0 +1,19 @@
+type: object
+x-ogen-name: DataQualitySql
+properties:
+  type:
+    type: string
+    description: The type of quality check. 'text' is human-readable text that describes the quality of the data. 'library' is a set of maintained predefined quality attributes such as row count or unique. 'sql' is an individual SQL query that returns a value that can be compared. 'custom' is quality attributes that are vendor-specific, such as Soda or Great Expectations.
+    enum:
+      - text
+      - library
+      - sql
+      - custom
+    default: library
+  query:
+    type: string
+    description: Query string that adheres to the dialect of the provided server.
+    examples:
+      - SELECT COUNT(*) FROM ${table} WHERE ${column} IS NOT NULL
+required:
+  - query

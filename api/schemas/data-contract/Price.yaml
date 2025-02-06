@@ -1,0 +1,11 @@
+type: object
+properties:
+  priceAmount:
+    type: number
+    description: Subscription price per unit of measure in `priceUnit`.
+  priceCurrency:
+    type: string
+    description: Currency of the subscription price in `priceAmount`.
+  priceUnit:
+    type: string
+    description: The unit of measure for calculating cost. Examples megabyte, gigabyte.

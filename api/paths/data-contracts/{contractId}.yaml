@@ -1,0 +1,79 @@
+get:
+  tags:
+    - Data Contracts
+  operationId: GetDataContract
+  x-ogen-operation-group: DataContracts
+  summary: Get Data Contract
+  description: Get a data contract by ID.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested data contract
+  responses:
+    "200":
+      description: The ODCS description of the data contract.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/data-contract/DataContract.yaml"
+        application/yaml:
+          schema:
+            $ref: "../../schemas/data-contract/DataContract.yaml"
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"
+
+patch:
+  tags:
+    - Data Contracts
+  operationId: UpdateDataContract
+  x-ogen-operation-group: DataContracts
+  summary: Update Data Contract
+  description: Update ODCS properties of a data contract by ID. Nested fields are overwritten when specified. Allowed if the client is the owner.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract to update.
+  requestBody:
+    description: The ODCS properties to update.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/data-contract/DataContractUpdate.yaml"
+
+  responses:
+    "204":
+      $ref: "../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"
+
+delete:
+  tags:
+    - Data Contracts
+  operationId: DeleteDataContract
+  summary: Delete Data Contract
+  description: Delete a data contract by ID. Allowed if the client owns the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract to delete.
+  responses:
+    "204":
+      $ref: "../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"

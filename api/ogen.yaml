@@ -1,0 +1,5 @@
+generator:
+  convenient_errors: off
+
+parser:
+  allow_remote: true

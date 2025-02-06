@@ -1,0 +1,33 @@
+get:
+  operationId: GetAttestationReport
+  summary: Get Attestation Report
+  description: Get an attestation report of the virtual machine
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Cages
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaboration space.
+    - in: query
+      name: nonce
+      description: >
+        A nonce to add to the attestation report:
+        * fingerpint: Attach a hex-encoded SHA-256 fingerprint of the public key
+      schema:
+        type: string
+        enum: [fingerprint]
+      required: false
+  responses:
+    "200":
+      description: An attestation report.
+      content:
+        text/plain:
+          schema:
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"

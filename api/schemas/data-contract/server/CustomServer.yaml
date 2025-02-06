@@ -1,0 +1,65 @@
+type: object
+x-ogen-name: CustomServer
+description: Customise how data is fetched
+properties:
+  type:
+    type: string
+    description: Type of the server.
+    example: custom
+  location:
+    type: string
+    description: A URL to a location.
+    format: uri
+  path:
+    type: string
+    description: Relative or absolute path to the data file(s).
+  account:
+    type: string
+    description: Account used by the server.
+  catalog:
+    type: string
+    description: Name of the catalog.
+  database:
+    type: string
+    description: Name of the database.
+  dataset:
+    type: string
+    description: Name of the dataset.
+  delimiter:
+    type: string
+    description: Delimiter.
+  endpointUrl:
+    type: string
+    description: Server endpoint.
+    format: uri
+  format:
+    type: string
+    description: File format.
+  host:
+    type: string
+    description: Host name or IP address.
+  port:
+    type: integer
+    description: Port to the server. No default value is assumed for custom servers.
+  project:
+    type: string
+    description: Project name.
+  region:
+    type: string
+    description: Cloud region.
+  regionName:
+    type: string
+    description: Region name.
+  schema:
+    type: string
+    description: Name of the schema.
+  serviceName:
+    type: string
+    description: Name of the service.
+  stagingDir:
+    type: string
+    description: Staging directory.
+  warehouse:
+    type: string
+    description: Name of the cluster or warehouse.
+required: [type]

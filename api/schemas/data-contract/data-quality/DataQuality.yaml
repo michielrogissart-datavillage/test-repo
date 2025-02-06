@@ -1,0 +1,77 @@
+type: array
+description: Data quality rules with all the relevant information for rule setup and execution
+items:
+  type: object
+  discriminator:
+    propertyName: type
+    mapping:
+      library: ./DataQualityLibrary.yaml
+      sql: ./DataQualitySql.yaml
+  oneOf:
+    - $ref: ./DataQualityLibrary.yaml
+    - $ref: ./DataQualitySql.yaml
+  properties:
+    businessImpact:
+      type: string
+      description: Consequences of the rule failure.
+      examples:
+        - operational
+        - regulatory
+    description:
+      type: string
+      description: Describe the quality check to be completed.
+    dimension:
+      type: string
+      description: The key performance indicator (KPI) or dimension for data quality.
+      enum:
+        - accuracy
+        - completeness
+        - conformity
+        - consistency
+        - coverage
+        - timeliness
+        - uniqueness
+    method:
+      type: string
+      examples:
+        - reconciliation
+    name:
+      type: string
+      description: Name of the data quality check.
+    schedule:
+      type: string
+      description: Rule execution schedule details.
+      examples:
+        - 0 20 * * *
+    scheduler:
+      type: string
+      description: The name or type of scheduler used to start the data quality check.
+      examples:
+        - cron
+    severity:
+      type: string
+      description: The severance of the quality rule.
+      examples:
+        - info
+        - warning
+        - error
+    unit:
+      type: string
+      description: Unit the rule is using, popular values are `rows` or `percent`, but any value is allowed.
+      examples:
+        - rows
+        - percent
+    tags:
+      type: array
+      items:
+        type: string
+      description: A list of tags that may be assigned to the elements (object or property); the tags keyword may appear at any level.
+    authoritativeDefinitions:
+      type: array
+      items:
+        $ref: "../AuthorativeDefinition.yaml"
+    customProperties:
+      type: array
+      description: Additional properties required for rule execution.
+      items:
+        $ref: "../CustomProperty.yaml"

@@ -1,0 +1,67 @@
+type: object
+properties:
+  version:
+    type: string
+    description: Current version of the data contract.
+  name:
+    type: string
+    description: Name of the data contract.
+  status:
+    type: string
+    description: Current status of the dataset. Valid values are `production`, `test`, or `development`.
+    example:
+      - production
+      - test
+      - development
+  id:
+    type: string
+    description: >
+      A unique identifier used to reduce the risk of dataset name collisions, such as a UUID.
+      This only has meaning for the data owner and is not used to identify data contracts in the Datavillage DCP
+  apiVersion:
+    type: string
+    description: Version of the standard used to build data contract. Default value is v3.0.0.
+    default: v3.0.0
+    enum:
+      - v3.0.0
+      - v2.2.2
+      - v2.2.1
+      - v2.2.0
+  kind:
+    type: string
+    default: DataContract
+    enum: [DataContract]
+  tenant:
+    type: string
+    description: Indicates the property the data is primarily associated with. Value is case insensitive.
+  tags:
+    type: array
+    description: A list of tags that may be assigned to the elements (object or property); the tags keyword may appear at any level.
+    items:
+      type: string
+  dataProduct:
+    type: string
+    description: The name of the data product.
+  description:
+    $ref: "Description.yaml"
+  price:
+    $ref: "Price.yaml"
+  domain:
+    type: string
+    description: Name of the logical data domain
+    example:
+      - imdb_ds_aggregate
+      - receiver_profile_out
+      - transaction_profile_out
+  slaDefaultElement:
+    type: string
+    description: Element (using the element path notation) to do the checks on.
+  contractCreatedTs:
+    type: string
+    format: date-time
+    description: Timestamp in UTC of when the data contract was created.
+  servers:
+    type: array
+    description: List of servers where the datasets reside.
+    items:
+      $ref: "server/ODCSServer.yaml"

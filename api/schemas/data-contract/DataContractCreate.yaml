@@ -1,0 +1,11 @@
+title: Data Contract Create
+description: ODCS description of a data contract
+allOf:
+  - $ref: "AbstractDataContract.yaml"
+  - type: object
+    properties:
+      schema:
+        type: array
+        items:
+          $ref: "SchemaCreate.yaml"
+    required: [version, name, status, id, apiVersion, kind]

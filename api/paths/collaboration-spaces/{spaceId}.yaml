@@ -1,0 +1,74 @@
+get:
+  operationId: GetCollaborationSpace
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Get Collaboration Space
+  description: >
+    Get a collaboration space by ID. Allowed if the client either owns it or is a collaborator.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the requested collaboration space.
+  responses:
+    "200":
+      description: The model of the collaboration space.
+      content:
+        application/json:
+          schema:
+            $ref: "../../schemas/collaboration-space/CollaborationSpace.yaml"
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"
+
+patch:
+  operationId: UpdateCollaborationSpace
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Update a collaboration space by ID. Allowed if the client owns the space.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space to update.
+  requestBody:
+    description: The fields of the model to update. Nested objects will be overwritten when specified.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../schemas/collaboration-space/CollaborationSpaceUpdate.yaml"
+  responses:
+    "204":
+      $ref: "../../schemas/NoContent.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"
+
+delete:
+  operationId: DeleteCollaborationSpace
+  x-ogen-operation-group: CollaborationSpaces
+  tags:
+    - Collaboration Spaces
+  summary: Delete Collaboration Space
+  description: Delete a collaboration space by id. Allowed if the client owns the space.
+  parameters:
+    - in: path
+      name: spaceId
+      schema:
+        type: string
+      required: true
+      description: The ID of the collaboration space to delete.
+  responses:
+    "204":
+      $ref: "../../schemas/NoContent.yaml"
+    "401":
+      $ref: "../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../schemas/NotFoundError.yaml"

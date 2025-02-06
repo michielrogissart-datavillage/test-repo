@@ -1,0 +1,9 @@
+title: Property
+description: Identifiable ODCS description of a property
+allOf:
+  - $ref: "AbstractProperty.yaml"
+  - type: object
+    properties:
+      _id:
+        type: string
+    required: [name, _id]

@@ -1,0 +1,34 @@
+post:
+  tags:
+    - Data Contracts
+  summary: Create Property
+  x-ogen-operation-group: DataContracts
+  operationId: CreateProperty
+  description: Create a new property based on an ODCS description. Allowed if the client is the owner of the contract.
+  parameters:
+    - in: path
+      name: contractId
+      schema:
+        type: string
+      required: true
+      description: The ID of the data contract to add a property to.
+    - in: path
+      name: schemaId
+      schema:
+        type: string
+      required: true
+      description: The ID of the schema in the contract where to add the property to.
+  requestBody:
+    description: The ODCS properties of the property.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: "../../../../../schemas/data-contract/PropertyCreate.yaml"
+  responses:
+    "201":
+      $ref: "../../../../../schemas/CreatedResource.yaml"
+    "401":
+      $ref: "../../../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../../../schemas/NotFoundError.yaml"

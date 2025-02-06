@@ -1,0 +1,19 @@
+get:
+  operationId: GetNotifications
+  x-ogen-operation-group: Clients
+  tags:
+    - Clients
+  summary: Get Notifications
+  description: Get all notifications related to a client
+  parameters:
+    - in: path
+      name: clientId
+      schema:
+        type: string
+      required: true
+      description: The requested client.
+  responses:
+    "401":
+      $ref: "../../../schemas/UnauthorizedError.yaml"
+    "404":
+      $ref: "../../../schemas/NotFoundError.yaml"
